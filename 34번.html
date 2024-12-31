@@ -1,0 +1,482 @@
+<html><head><base href="." />
+<style>
+  /* Keeping all existing styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-image: url('/돼지핑.jpg'); /* Change to new pig image */
+    background-size: contain;
+    background-position: center;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    max-width: 600px; /* Reduce from 800px to 600px */
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Adjust the overlay to work better with the pink background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7); /* Increase opacity for better readability */
+    z-index: -1;
+  }
+
+  .page-title {
+    text-align: center;
+    color: #ff1493; /* Deeper pink to stand out */
+    font-size: 2em;
+    margin-bottom: 30px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.5);
+  }
+
+  .problem-types {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 20px; /* Increase gap between buttons */
+    margin: 0 auto 20px auto; /* Center the container */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px; /* Increase padding */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(255, 105, 180, 0.2);
+    width: 80%; /* Set container width */
+    max-width: 500px; /* Maximum width */
+  }
+
+  /* Update the button styles */
+  .type-btn {
+    padding: 15px 30px; /* Increase padding to make buttons bigger */
+    border: 3px solid #ff1493; /* Make border thicker */
+    border-radius: 8px; /* Slightly larger border radius */
+    background-color: rgba(255, 105, 180, 0.9);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.2em; /* Increase font size */
+    font-weight: bold; /* Make text bold */
+    min-width: 100px; /* Ensure minimum width */
+  }
+
+  /* Update hover effect */
+  .type-btn:hover {
+    background-color: #ff1493;
+    box-shadow: 0 4px 12px rgba(255, 20, 147, 0.4);
+    transform: scale(1.05); /* Add slight scale effect on hover */
+  }
+
+  .passage {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .blank {
+    color: #3498db;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .option {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .option:hover {
+    background-color: #e8f4f8;
+  }
+
+  .option.selected {
+    background-color: #d5edf8;
+  }
+
+  .check-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .check-btn:hover {
+    background-color: #27ae60;
+  }
+
+  .paragraph {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .paragraph.selected {
+    background-color: #d5edf8;
+  }
+
+  .first-paragraph {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .answer-display {
+    margin: 20px 0;
+    font-weight: bold;
+  }
+
+  /* New styles for insert problem */
+  .insert-sentence {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(255, 105, 180, 0.2);
+    text-align: center;
+  }
+
+  .insert-option {
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .insert-option:hover {
+    background-color: #ff1493;
+    transform: scale(1.05);
+  }
+
+  .insert-option.selected {
+    background-color: #ff1493;
+    box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+  }
+
+  .mascot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    z-index: 1000;
+  }
+</style>
+</head>
+<body>
+  <svg class="mascot" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="45" fill="#ffb6c1"/>
+    <circle cx="35" cy="40" r="8" fill="white"/>
+    <circle cx="65" cy="40" r="8" fill="white"/>
+    <circle cx="35" cy="40" r="4" fill="black"/>
+    <circle cx="65" cy="40" r="4" fill="black"/>
+    <path d="M 40 60 Q 50 70 60 60" fill="none" stroke="#ff69b4" stroke-width="3"/>
+    <path d="M 20 20 Q 30 10 40 20" fill="none" stroke="#ff69b4" stroke-width="3"/>
+    <path d="M 60 20 Q 70 10 80 20" fill="none" stroke="#ff69b4" stroke-width="3"/>
+  </svg>
+
+  <h1 class="page-title">No.34</h1>
+
+  <div class="problem-types">
+    <button class="type-btn" onclick="selectType('order')">순서</button>
+    <button class="type-btn" onclick="selectType('insert')">삽입</button>
+    <button class="type-btn" onclick="selectType('blank')">빈칸</button>
+  </div>
+
+  <div id="problem-content"></div>
+
+<script>
+const passages = {
+  order: {
+    first: "On­screen, climate disaster is everywhere you look, but the scope of the world's climate transformation may just as quickly eliminate the climate­fiction genre ― indeed eliminate any effort to tell the story of warming, which could grow too large and too obvious even for Hollywood.",
+    rest: [
+      "You can tell stories 'about' climate change while it still seems a marginal feature of human life. But when the temperature rises by three or four more degrees, hardly anyone will be able to feel isolated from its impacts.",
+      "Why watch or read climate fiction about the world you can see plainly out your own window? At the moment, stories illustrating global warming can still offer an escapist pleasure, even if that pleasure often comes in the form of horror.",
+      "But when we can no longer pretend that climate suffering is distant — in time or in place ― we will stop pretending about it and start pretending within it."
+    ]
+  },
+  blank: {
+    text: "On­screen, climate disaster is everywhere you look, but the scope of the world's climate transformation may _______________ ― indeed eliminate any effort to tell the story of warming, which could grow too large and too obvious even for Hollywood.",
+    answer: "just as quickly eliminate the climate­fiction genre",
+    options: [
+      "just as quickly eliminate the climate­fiction genre",
+      "gradually strengthen the climate-fiction genre",
+      "slowly enhance the popularity of climate stories",
+      "permanently establish climate fiction as mainstream",
+      "indefinitely sustain the climate narrative tradition"
+    ]
+  },
+  insert: {
+    sentences: [
+      "But when the temperature rises by three or four more degrees, hardly anyone will be able to feel isolated from its impacts.",
+      "And so as climate change expands across the horizon, it may cease to be a story."
+    ],
+    paragraphs: [
+      "On­screen, climate disaster is everywhere you look, but the scope of the world's climate transformation may just as quickly eliminate the climate­fiction genre ― indeed eliminate any effort to tell the story of warming, which could grow too large and too obvious even for Hollywood.",
+      "You can tell stories 'about' climate change while it still seems a marginal feature of human life.",
+      "But when the temperature rises by three or four more degrees, hardly anyone will be able to feel isolated from its impacts.", // Fixed position for first sentence
+      "Why watch or read climate fiction about the world you can see plainly out your own window?",
+      "At the moment, stories illustrating global warming can still offer an escapist pleasure, even if that pleasure often comes in the form of horror.",
+      "But when we can no longer pretend that climate suffering is distant — in time or in place ― we will stop pretending about it and start pretending within it."
+    ],
+    correctPositions: [2, 3] // Position index for each sentence
+  }
+};
+
+let selectedInsertPosition = null;
+
+function showInsertProblem() {
+  const sentenceIndex = Math.floor(Math.random() * 2);
+  const sentenceToInsert = passages.insert.sentences[sentenceIndex];
+  const correctPosition = passages.insert.correctPositions[sentenceIndex];
+  
+  const content = document.getElementById('problem-content');
+  
+  let html = `
+    <div class="insert-sentence">
+      다음 문장이 삽입될 위치를 고르시오:<br>${sentenceToInsert}
+    </div>
+    <div class="passage">
+  `;
+
+  // Insert option before first paragraph
+  html += `<div class="insert-option" onclick="selectInsertPosition(0)">1</div>`;
+
+  for(let i = 0; i < passages.insert.paragraphs.length; i++) {
+    let paragraph = passages.insert.paragraphs[i];
+    
+    // Skip the sentence that's being tested
+    if (i === correctPosition) {
+      continue;
+    }
+    
+    // Special case: When testing the first sentence and we're about to output "Why watch..."
+    if (sentenceToInsert === passages.insert.sentences[0] && 
+        paragraph === "Why watch or read climate fiction about the world you can see plainly out your own window?") {
+      html += `<p>And so as climate change expands across the horizon, it may cease to be a story.</p>`;
+    }
+    
+    html += `<p>${paragraph}</p>`;
+    html += `<div class="insert-option" onclick="selectInsertPosition(${i + 1})">${i + 2}</div>`;
+  }
+  
+  html += `</div>
+    <button class="check-btn" onclick="checkInsertAnswer(${correctPosition})">Check Answer</button>
+    <div id="answer-feedback" style="margin-top: 20px;"></div>
+  `;
+    
+  content.innerHTML = html;
+  selectedInsertPosition = null;
+}
+
+function selectInsertPosition(position) {
+  selectedInsertPosition = position;
+  document.querySelectorAll('.insert-option').forEach((opt, i) => {
+    opt.classList.toggle('selected', i === position);
+  });
+}
+
+function checkInsertAnswer(correctPosition) {
+  if (selectedInsertPosition === null) {
+    document.getElementById('answer-feedback').innerHTML = 
+      '<div style="color: #ff1493;">Please select an insertion point!</div>';
+    return;
+  }
+  
+  const isCorrect = selectedInsertPosition === correctPosition;
+  
+  document.getElementById('answer-feedback').innerHTML = isCorrect ? 
+    '<div style="color: #2ecc71;">Correct! Well done!</div>' : 
+    '<div style="color: #e74c3c;">Incorrect. Try again!</div>';
+    
+  if (!isCorrect) {
+    selectedInsertPosition = null;
+    document.querySelectorAll('.insert-option').forEach(opt => opt.classList.remove('selected'));
+  }
+}
+
+// Keep all existing functions
+function selectType(type) {
+  switch(type) {
+    case 'order':
+      showOrderProblem();
+      break;
+    case 'blank':
+      showBlankProblem();
+      break;
+    case 'insert':
+      showInsertProblem();
+      break;
+  }
+}
+
+// All other existing functions remain the same
+function showOrderProblem() {
+  const content = document.getElementById('problem-content');
+  content.innerHTML = `
+    <div class="first-paragraph">${passages.order.first}</div>
+    <div class="paragraph-container" id="paragraphs"></div>
+    <div class="answer-display">Your answer: <span id="selected-order"></span></div>
+    <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+  `;
+  initializeProblem();
+}
+
+function showBlankProblem() {
+  const content = document.getElementById('problem-content');
+  content.innerHTML = `
+    <div class="passage">${passages.blank.text}</div>
+    <div class="options">
+      ${passages.blank.options.map((option, index) => 
+        `<div class="option" onclick="selectOption(${index})">${index + 1}. ${option}</div>`
+      ).join('')}
+    </div>
+    <button class="check-btn" onclick="checkBlankAnswer()">Check Answer</button>
+  `;
+}
+
+let selectedOption = null;
+
+function selectOption(index) {
+  selectedOption = index;
+  document.querySelectorAll('.option').forEach((opt, i) => {
+    opt.classList.toggle('selected', i === index);
+  });
+}
+
+function checkBlankAnswer() {
+  if (selectedOption === null) {
+    alert('Please select an answer first!');
+    return;
+  }
+  const isCorrect = passages.blank.options[selectedOption] === passages.blank.answer;
+  alert(isCorrect ? 'Correct! Well done!' : 'Incorrect. Try again!');
+  if (!isCorrect) {
+    selectedOption = null;
+    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+  }
+}
+
+let currentOrder = [];
+let selectedParagraphs = [];
+
+function shuffle(array) {
+  let currentIndex = array.length;
+  while (currentIndex !== 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
+function initializeProblem() {
+  const paragraphsContainer = document.getElementById('paragraphs');
+  if (!paragraphsContainer) return;
+  
+  paragraphsContainer.innerHTML = '';
+  selectedParagraphs = [];
+  
+  currentOrder = [0, 1, 2];
+  let shuffledOrder = shuffle([...currentOrder]);
+  
+  while (arraysEqual(shuffledOrder, currentOrder)) {
+    shuffledOrder = shuffle([...currentOrder]);
+  }
+  
+  shuffledOrder.forEach((index, position) => {
+    const label = String.fromCharCode(65 + position);
+    const div = document.createElement('div');
+    div.className = 'paragraph';
+    div.innerHTML = `${label}. [${passages.order.rest[index]}]`;
+    div.onclick = () => selectParagraph(label);
+    paragraphsContainer.appendChild(div);
+  });
+  
+  currentOrder = shuffledOrder;
+  updateSelectedOrder();
+}
+
+function selectParagraph(label) {
+  const index = selectedParagraphs.indexOf(label);
+  if (index === -1) {
+    selectedParagraphs.push(label);
+  } else {
+    selectedParagraphs.splice(index, 1);
+  }
+  updateSelectedOrder();
+  updateParagraphStyles();
+}
+
+function updateSelectedOrder() {
+  const selectedOrderSpan = document.getElementById('selected-order');
+  if (selectedOrderSpan) {
+    selectedOrderSpan.textContent = selectedParagraphs.join('-');
+  }
+}
+
+function updateParagraphStyles() {
+  const paragraphs = document.querySelectorAll('.paragraph');
+  paragraphs.forEach(p => {
+    const label = p.textContent[0];
+    p.classList.toggle('selected', selectedParagraphs.includes(label));
+  });
+}
+
+function checkAnswer() {
+  if (selectedParagraphs.length !== 3) {
+    alert('Please select all three paragraphs in order!');
+    return;
+  }
+
+  const userOrderIndices = selectedParagraphs.map(label => {
+    const position = label.charCodeAt(0) - 65;
+    return currentOrder[position];
+  });
+  
+  const isCorrect = arraysEqual(userOrderIndices, [0, 1, 2]);
+  
+  alert(isCorrect ? 'Correct! Well done!' : 'Incorrect. Try again!');
+    
+  if (!isCorrect) {
+    selectedParagraphs = [];
+    updateSelectedOrder();
+    updateParagraphStyles();
+  }
+}
+
+function arraysEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+// Initialize the order problem when the page loads
+window.onload = () => {
+  // Empty initial state - just showing the buttons
+  document.getElementById('problem-content').innerHTML = '';
+};
+</script>
+</body></html>
